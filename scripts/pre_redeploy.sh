@@ -111,3 +111,12 @@ if [[ ! -f "${UPGRADE_LEAP_MARKER_FOLDER}/configure-apt-sources-rpc.complete" ]]
    popd
    log "configure-apt-sources-rpc" "ok"
 fi
+
+# Fix hostname with fixed period mark
+if [[ -f "/etc/ansible/roles/openstack_hosts/templates/openstack-host-hostfile-setup.sh.j2" ]]; then
+    pushd /etc/ansible/roles/openstack_hosts/templates/
+        if grep -F '${RFCHOSTNAME}.${DOMAINNAME}' openstack-host-hostfile-setup.sh.j2 > /dev/null; then
+            sed -i 's/${RFCHOSTNAME}.${DOMAINNAME}/${RFCHOSTNAME}${DOMAINNAME}/g' openstack-host-hostfile-setup.sh.j2
+        fi
+    popd
+fi
